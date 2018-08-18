@@ -4,11 +4,6 @@ const commands = require('./commands');
 
 const client = new Discord.Client();
 
-const exampleCommand = 'deprecate --channel general';
-if (!exampleCommand.match(commands[1].pattern)) {
-  throw new Error(`example ${exampleCommand} doesn't parse!`);
-}
-
 function getPrefix() {
   return `<@${client.user.id}>`;
 }
@@ -34,7 +29,7 @@ client.on('message', message => {
   const anyCommandMatched = commands.some(({pattern, run}) => {
     const data = content.match(pattern);
     if (data) {
-      run(client, message, data);
+      run(message, data);
       // command matched, so don't keep iterating
       return true;
     }
@@ -44,7 +39,6 @@ client.on('message', message => {
 
   if (!anyCommandMatched) {
     commands[0].run(
-      client,
       message,
       null,
       `I don't understand the command "${content}"`,
